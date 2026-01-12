@@ -31,3 +31,6 @@
 ## Configuration & Security Notes
 - The app targets modern Android APIs; use Android Studio (2022.3.1+ suggested) and Java 11+ (Java 17 preferred).
 - Keep secrets out of the repo; use local Gradle properties for any developer-specific config.
+
+## Documentation Index
+- `dev-docs/emoji-selector.md` — overview of the emoji selector feature, including scope, UI/UX behavior, data sources, and limitations so readers can quickly understand the full breadth of the component.
