@@ -1,64 +1,138 @@
-# Emoji selector feature
+# Emoji switcher integration — technical specification
 
-## Overview
-The emoji selector is an alternate keyboard mode that replaces the key grid with AndroidX’s `EmojiPickerView`. It is entered by tapping a key bound to `ToggleEmojiMode(true)` (commonly the mood icon). While in emoji mode, the UI shows the picker plus a slim column of control keys (back-to-ABC, numeric, backspace, return) sized to match the active keyboard layout. Selecting an emoji commits the emoji character directly to the current `InputConnection`.
+## Summary
+Integrate a purpose-built, open source emoji switcher with search into Thumb-Key’s emoji mode. The switcher will replace the current EmojiPickerView surface with a keyboard-grade emoji UI that supports recent, category navigation, and search, while keeping Thumb-Key’s existing emoji-mode entry/exit flow.
 
-## User flow
-1. User taps an emoji toggle key (mood icon) on any keyboard layout.
-2. The toggle key emits `KeyAction.ToggleEmojiMode(true)`, which is handled by `performKeyAction`.
-3. The app calls `TextProcessor.handleFinishInput` (if a processor is active) and switches `KeyboardScreen` into `KeyboardMode.EMOJI`.
-4. `KeyboardScreen` renders an `EmojiPickerView` alongside controller keys sized based on the number of main keyboard rows.
-5. When the user picks an emoji, the picker commits the emoji to the current input connection, with optional haptic and audio feedback.
-6. The user exits emoji mode via the “ABC” back key (`ToggleEmojiMode(false)`), returning to the main layout.
+## Goals
+- Provide an emoji switcher with **first-class search** (query → filtered emojis).
+- Preserve existing emoji-mode toggling and commit behavior (emoji selection inserts into `InputConnection`).
+- Support recent emojis, skin-tone variants, and category browsing.
+- Keep performance acceptable on low-end devices (fast search, small memory footprint).
 
-## Location map (code & resources)
-- Emoji mode UI and picker integration: `app/src/main/java/com/dessalines/thumbkey/ui/components/keyboard/KeyboardScreen.kt` (`KeyboardScreen`, `KeyboardMode.EMOJI`, `EmojiPickerView`, controller key sizing).
-- Key action dispatch and emoji-mode toggle handling: `app/src/main/java/com/dessalines/thumbkey/utils/Utils.kt` (`performKeyAction`, `KeyAction.ToggleEmojiMode`).
-- Emoji-mode action types: `app/src/main/java/com/dessalines/thumbkey/utils/Types.kt` (`KeyAction.ToggleEmojiMode`).
-- Emoji toggle key definitions: `app/src/main/java/com/dessalines/thumbkey/keyboards/CommonKeys.kt` (`EMOJI_KEY_ITEM`, `EMOJI_BACK_KEY_ITEM`, `TOGGLE_EMOJI_MODE_TRUE_KEYC`, `TOGGLE_EMOJI_MODE_FALSE_KEYC`).
-- Emoji-specific layout (Toki Pona sitelen emoji keyboard): `app/src/main/java/com/dessalines/thumbkey/keyboards/TOKSitelenThumbkeyEmoji.kt` (`KB_TOK_SITELEN_THUMBKEY_EMOJI`).
-- Emoji keyboard layout registration: `app/src/main/java/com/dessalines/thumbkey/utils/KeyboardLayout.kt` (`TOKSitelenThumbKeyEmoji` enum entry).
-- Text processor hook used when toggling emoji mode: `app/src/main/java/com/dessalines/thumbkey/textprocessors/TextProcessor.kt` (`handleFinishInput`).
+## Non-goals
+- Redesigning the base keyboard layouts or key actions.
+- Implementing custom emoji glyphs beyond the provider supplied by the emoji switcher library.
 
-## Entity-object analysis
-### UI/feature entities
-- **Emoji selector surface** (`EmojiPickerView`)
-  - **Role:** Renders the emoji grid UI.
-  - **Owner:** `KeyboardScreen` in `KeyboardMode.EMOJI`.
-  - **Lifecycle:** Created in `AndroidView` factory; listener commits emoji to `InputConnection`.
-  - **Data:** Emits `it.emoji` from picker callback.
+## Library selection
+### Recommended library: Vanniktech Emoji
+**Why**: Vanniktech Emoji is an open source Android emoji keyboard/popup library that explicitly supports search via the `SearchEmoji` interface and has a large star count on GitHub, indicating strong community adoption. The README documents dependency setup and `EmojiPopup` configuration, including the ability to supply custom search behavior and use the default search implementation. The repository has 1,600+ GitHub stars, indicating it is a highly rated, purpose-built emoji component. 
 
-- **Emoji mode keyboard surface** (`KeyboardScreen` with `KeyboardMode.EMOJI`)
-  - **Role:** Switches rendering between standard keyboard rows and emoji selector UI.
-  - **State:** `mode` mutable state drives the mode selection.
-  - **Dependencies:** Uses `KeyboardDefinition` for sizing; uses `AppSettings` for haptics/sound and layout sizing.
+**Evidence**:
+- The README documents `EmojiPopup` configuration and a `SearchEmoji` interface for search, with a default search implementation when none is provided. (https://github.com/vanniktech/Emoji/blob/master/README.md)
+- Dependency instructions for the AndroidX Emoji2 provider (`emoji-androidx-emoji2`) and `EmojiManager.install(...)` are documented in the README. (https://github.com/vanniktech/Emoji/blob/master/README.md)
+- The GitHub API lists the repository’s `stargazers_count` (1,600+), supporting “highly rated” status. (https://api.github.com/repos/vanniktech/Emoji)
 
-- **Emoji toggle key** (`EMOJI_KEY_ITEM` / `EMOJI_BACK_KEY_ITEM`)
-  - **Role:** Entry/exit points for emoji mode.
-  - **Action payload:** `ToggleEmojiMode(true|false)`.
-  - **Placement:** Included in many keyboard layout definitions; special emoji keyboard provides its own entry.
+## Current system context
+Thumb-Key already has an emoji mode driven by `KeyAction.ToggleEmojiMode` and an emoji selector surface in `KeyboardScreen` (see `dev-docs/emoji-selector.md`). This spec extends that flow by swapping the emoji surface with a Vanniktech Emoji-backed switcher while keeping the surrounding controller keys, toggle actions, and commit-to-`InputConnection` flow intact.
 
-### Domain entities
-- **Key action** (`KeyAction.ToggleEmojiMode`)
-  - **Role:** Command object indicating a change to emoji mode.
-  - **Handler:** `performKeyAction` performs logging, calls `TextProcessor.handleFinishInput`, then updates mode via callback.
+## User experience
+### Entry points
+- User taps the emoji key (existing behavior). 
+- Keyboard transitions to Emoji mode with the emoji switcher and control keys (ABC, numeric, backspace, return) on the side.
 
-- **Text processor** (`TextProcessor`)
-  - **Role:** Optional pre/post-processing hooks for text input.
-  - **Emoji mode tie-in:** `handleFinishInput` is invoked before switching modes, allowing processors to flush or finalize state.
+### Primary interactions
+- **Search**: A search row at the top of the emoji switcher allows text query. Results show filtered emoji across categories.
+- **Category tabs**: Horizontal tab bar for categories (smileys, animals, food, etc.).
+- **Recents**: First tab shows recently used emojis.
+- **Skin tone variants**: Long-press or tap variant indicator to select tone.
 
-- **Keyboard layout definition** (`KeyboardDefinition`, `KeyboardLayout`)
-  - **Role:** Supplies layout data and metadata; `KeyboardLayout` contains emoji-specific layout registration (`TOKSitelenThumbKeyEmoji`).
-  - **Emoji mode tie-in:** `KeyboardScreen` uses the main layout row count to decide how many controller keys are shown alongside the emoji picker.
+### Exit points
+- “ABC” back key exits emoji mode and returns to standard keyboard.
 
-### Data flow summary
-1. **Tap → KeyAction:** User taps emoji key → `KeyAction.ToggleEmojiMode(true)`.
-2. **KeyAction → Mode change:** `performKeyAction` handles the toggle, calls `TextProcessor.handleFinishInput`, triggers `onToggleEmojiMode`.
-3. **Mode change → UI:** `KeyboardScreen` switches to emoji UI, constructs controller key column based on row count.
-4. **Emoji pick → Commit:** `EmojiPickerView` listener commits `emoji` to `InputConnection` and applies haptic/audio feedback.
+## Architecture changes
+### High-level component map
+- **Emoji switcher surface**: Replace `EmojiPickerView` with Vanniktech Emoji’s popup/keyboard view embedded in emoji mode UI.
+- **Emoji data provider**: Install `GoogleCompatEmojiProvider` (Emoji2) or a configurable provider from Vanniktech Emoji in the app’s `Application` class.
+- **Search integration**: Implement a search bar and hook it into Vanniktech’s `SearchEmoji` interface (default or custom).
 
-## Behavior details worth noting
-- The emoji UI is backed by AndroidX `EmojiPickerView` rather than a custom Compose list, and it commits directly to the active `InputConnection`.
-- Controller key count adapts to the number of rows in the main keyboard layout to keep the emoji picker height aligned.
-- Emoji mode and numeric/shift/alt/ctrl modes are mutually exclusive because the `mode` state in `KeyboardScreen` is set directly when toggling.
+### Modules & files
+- `app/src/main/java/.../ui/components/keyboard/KeyboardScreen.kt`
+  - Replace EmojiPickerView AndroidView with a Vanniktech Emoji view container.
+  - Add composable search bar in emoji mode (input → search).
+- `app/src/main/java/.../App.kt` (or app `Application` class)
+  - Initialize `EmojiManager.install(...)` with a provider.
+- `app/src/main/java/.../settings/EmojiSettings.kt` (new)
+  - Persist default skin tone and search behavior preferences (optional).
+- `app/src/main/res/values/strings.xml`
+  - Add strings for search hint and accessibility labels.
 
+## Detailed design
+### UI layout (emoji mode)
+```
++--------------------------------------------------+
+| Search field (query, clear button)               |
++--------------------------------------------------+
+| Category tabs (recents, smileys, animals, etc.)  |
++--------------------------------------------------+
+| Emoji grid (filtered by search query)            |
+|                                                  |
+|                                                  |
++--------------------------------------------------+
+| (Right-side control keys column)                 |
+| ABC | 123 | Backspace | Enter | ...              |
++--------------------------------------------------+
+```
+
+### Emoji picker integration
+- Use Vanniktech Emoji’s keyboard/popup view to render the emoji grid and category tabs.
+- Configure `EmojiPopup` to listen for emoji clicks and commit the selected emoji to `InputConnection`.
+- Wire recents and variants using Vanniktech’s default managers unless custom behavior is required.
+
+### Search behavior
+- Add a search field in the emoji mode header.
+- On query update:
+  - Call Vanniktech’s `SearchEmoji` implementation (default `SearchEmojiManager` or custom).
+  - Update the emoji grid dataset to show results.
+- If the search query is empty, restore category-based browsing.
+
+### Data flow
+1. User taps emoji key → `ToggleEmojiMode(true)`.
+2. Emoji mode composes the Vanniktech Emoji view and search bar.
+3. Emoji view uses installed `EmojiProvider` (Emoji2).
+4. User types in search → `SearchEmoji.search(query)` → results list.
+5. User taps emoji → `onEmojiClickListener` commits emoji to `InputConnection`.
+6. Recent emojis updated via Vanniktech `RecentEmoji` manager.
+
+## Implementation steps
+1. **Dependency setup**
+   - Add Vanniktech Emoji and `emoji-androidx-emoji2` provider dependencies to `app/build.gradle.kts`.
+   - Ensure Emoji2 is initialized in the application class.
+2. **Emoji provider initialization**
+   - Initialize `EmojiManager.install(GoogleCompatEmojiProvider(EmojiCompat.init(this)))` in the app’s `Application`.
+3. **Emoji switcher surface**
+   - Replace `EmojiPickerView` in `KeyboardScreen` with a Vanniktech Emoji view or popup embedded in Compose via `AndroidView`.
+   - Add `onEmojiClickListener` to commit to `InputConnection`.
+4. **Search UI**
+   - Add a Compose `TextField` at the top of emoji mode.
+   - Connect to `SearchEmoji` (default `SearchEmojiManager`) for query → results.
+5. **Recents & variants**
+   - Use Vanniktech defaults; optionally integrate app settings for sticky variants.
+6. **Telemetry (optional)**
+   - Track search usage and emoji selection counts (if analytics exists).
+
+## Performance considerations
+- Cache last search results for immediate backspacing.
+- Debounce search input (e.g., 150–250ms) to avoid frequent filtering.
+- Avoid blocking UI thread; perform search in a background dispatcher if needed.
+
+## Accessibility
+- Search field must expose hint text and clear button with content description.
+- Emoji items should be accessible via TalkBack (Vanniktech provides content descriptions where possible).
+- Ensure category tabs have accessible labels.
+
+## Risk assessment
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Increased APK size | Medium | Use `emoji-androidx-emoji2` provider only; avoid extra emoji sets. |
+| Search latency on low-end devices | Medium | Debounce input and cache results. |
+| UI mismatch with keyboard style | Low | Customize styles to match existing theme. |
+
+## Rollout plan
+- Feature flag: `emojiSwitcherEnabled` in settings or remote config.
+- Beta rollout: enable for debug builds first.
+- Gradual release: enable for 10% of users if analytics indicates acceptable performance.
+
+## Open questions
+- Should emoji search be localized (language-specific keywords)?
+- Should search work across custom keyboards (e.g., Toki Pona emoji)?
+- Do we need a per-layout emoji switcher toggle or global?
