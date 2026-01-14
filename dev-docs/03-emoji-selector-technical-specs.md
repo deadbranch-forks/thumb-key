@@ -1,4 +1,4 @@
-# Emoji selector integration — technical specification
+# Emoji selector integration — initial proposal and draft technical specification
 
 ## Summary
 Integrate a purpose-built, open source emoji selector with search into Thumb-Key’s emoji mode. The selector will replace the current EmojiPickerView surface with a keyboard-grade emoji UI that supports recent, category navigation, and search, while keeping Thumb-Key’s existing emoji-mode entry/exit flow.
