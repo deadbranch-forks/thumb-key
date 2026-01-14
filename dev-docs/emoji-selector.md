@@ -5,5 +5,5 @@ The emoji selector is an alternate keyboard mode that replaces the key grid with
 
 ## Technical Documents
 
-1. [Draft proposal](emoji-selector-draft-proposal.md) - *created Jan 3, 2025*
-2.  [Emoji Selectar Proposal and Technical Spec](emoji-selector-technical-spec.md) - *created Jan 13, 2025*
+1. *Jan 3, 2025* - [Draft proposal](02-emoji-selector-draft-proposal.md)
+2.  *Jan 13, 2025* - [Emoji Selector Proposal and Technical Spec](03-emoji-selector-technical-specs.md)
