@@ -302,3 +302,13 @@ val MIGRATION_26_27 =
             )
         }
     }
+
+val MIGRATION_27_28 =
+    object : Migration(27, 28) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN keyboard_gestures_sensitivity INTEGER NOT NULL DEFAULT " +
+                    "$DEFAULT_KEYBOARD_GESTURES_SENSITIVITY",
+            )
+        }
+    }

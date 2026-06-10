@@ -94,6 +94,8 @@
     <string name="circular_drag_enable">Circular drag</string>
     <string name="ghost_keys_enable">Ghost keys</string>
     <string name="ghost_keys_description">Access hidden symbol keys without switching to numeric view</string>
+    <string name="keyboard_gestures_sensitivity">Keyboard-wide gesture sensitivity: %1$s</string>
+    <string name="keyboard_gestures_sensitivity_description">How easily a long swipe across multiple keys triggers a keyboard-wide gesture (configured in Modify keys). Higher is easier.</string>
     <string name="slide_hold_enable">Slide-hold cursor movement</string>
     <string name="slide_hold_description">Slide and hold to repeat cursor movement, slide-return-hold for word movement. Backspace: slide-hold to repeat delete, slide-return-hold for word delete.</string>
     <string name="backup_database">Backup database</string>
