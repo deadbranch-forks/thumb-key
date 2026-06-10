@@ -54,6 +54,7 @@ import com.dessalines.thumbkey.db.DEFAULT_GHOST_KEYS_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_HIDE_LETTERS
 import com.dessalines.thumbkey.db.DEFAULT_HIDE_SYMBOLS
 import com.dessalines.thumbkey.db.DEFAULT_IGNORE_BOTTOM_PADDING
+import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_GESTURES_SENSITIVITY
 import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_LAYOUT
 import com.dessalines.thumbkey.db.DEFAULT_KEY_BORDERS
 import com.dessalines.thumbkey.db.DEFAULT_KEY_BORDER_WIDTH
@@ -314,6 +315,7 @@ private fun resetAppSettingsToDefault(appSettingsViewModel: AppSettingsViewModel
             usePrivateClipboard = DEFAULT_USE_PRIVATE_CLIPBOARD,
             showOnScreenKeyboard = DEFAULT_SHOW_ON_SCREEN_KEYBOARD,
             slideHoldEnabled = DEFAULT_SLIDE_HOLD_ENABLED,
+            keyboardGesturesSensitivity = DEFAULT_KEYBOARD_GESTURES_SENSITIVITY,
         ),
     )
 }

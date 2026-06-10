@@ -72,6 +72,59 @@ fun getModifiedKeyboardDefinition(
         null
     }
 
+/**
+ * @param keyboardLayout The layout of the keyboard.
+ * @param keyModifications The key modifications YAML string.
+ * @return The keyboard-wide gesture configuration for the layout, if any.
+ */
+fun getKeyboardGestures(
+    keyboardLayout: KeyboardLayout,
+    keyModifications: String,
+): KeyboardGesturesSerializable? =
+    try {
+        deserializeKeyModifications(keyModifications)[keyboardLayout.name]?.gestures
+    } catch (e: Exception) {
+        val errorMessage = e.message ?: e.stackTraceToString()
+        Log.d(TAG, "Error reading keyboard gestures: $errorMessage")
+        null
+    }
+
+enum class KeyboardGestureSide {
+    DEFAULT,
+    LEFT,
+    RIGHT,
+}
+
+/**
+ * Resolves the direction -> KeyAction map for one rendered keyboard.
+ * A per-side override wins per-direction, falling back to the defaults.
+ */
+fun resolveKeyboardGestureActions(
+    gestures: KeyboardGesturesSerializable?,
+    side: KeyboardGestureSide,
+): Map<SwipeDirection, KeyAction> {
+    if (gestures == null) return emptyMap()
+
+    val override =
+        when (side) {
+            KeyboardGestureSide.LEFT -> gestures.leftKeyboard
+            KeyboardGestureSide.RIGHT -> gestures.rightKeyboard
+            KeyboardGestureSide.DEFAULT -> null
+        }
+
+    fun resolve(
+        sideGesture: KeyboardGestureSerializable?,
+        defaultGesture: KeyboardGestureSerializable?,
+    ): KeyAction? = getCommonKeyCFromKeyAction((sideGesture ?: defaultGesture)?.keyAction)?.action
+
+    return buildMap {
+        resolve(override?.north, gestures.north)?.let { put(SwipeDirection.TOP, it) }
+        resolve(override?.south, gestures.south)?.let { put(SwipeDirection.BOTTOM, it) }
+        resolve(override?.east, gestures.east)?.let { put(SwipeDirection.RIGHT, it) }
+        resolve(override?.west, gestures.west)?.let { put(SwipeDirection.LEFT, it) }
+    }
+}
+
 fun checkAllKeyboardModifications(
     keyModifications: String,
     keyModificationsErrorState: MutableState<String?>,
@@ -337,6 +390,36 @@ data class KeyboardDefinitionModesSerializable(
     val ctrled: KeyboardCSerializable? = null,
     val alted: KeyboardCSerializable? = null,
     val emoji: KeyboardCSerializable? = null,
+    val gestures: KeyboardGesturesSerializable? = null,
+)
+
+@Serializable
+@Keep
+data class KeyboardGestureSerializable(
+    val keyAction: KeyActionSerializable? = null,
+)
+
+@Serializable
+@Keep
+data class KeyboardGestureSetSerializable(
+    val north: KeyboardGestureSerializable? = null,
+    val south: KeyboardGestureSerializable? = null,
+    val east: KeyboardGestureSerializable? = null,
+    val west: KeyboardGestureSerializable? = null,
+)
+
+@Serializable
+@Keep
+data class KeyboardGesturesSerializable(
+    // Default actions for all rendered keyboards
+    val north: KeyboardGestureSerializable? = null,
+    val south: KeyboardGestureSerializable? = null,
+    val east: KeyboardGestureSerializable? = null,
+    val west: KeyboardGestureSerializable? = null,
+    // Optional per-direction overrides for the left/right rendered keyboard
+    // (the two keyboards of the Dual position, or the Left/Right positions)
+    val leftKeyboard: KeyboardGestureSetSerializable? = null,
+    val rightKeyboard: KeyboardGestureSetSerializable? = null,
 )
 
 @Serializable

@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +52,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.dessalines.thumbkey.IMEService
+import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_GESTURES_SENSITIVITY
 import com.dessalines.thumbkey.utils.CircularDirection
 import com.dessalines.thumbkey.utils.CircularDragAction
 import com.dessalines.thumbkey.utils.FontSizeVariant
@@ -69,6 +71,7 @@ import com.dessalines.thumbkey.utils.buildTapActions
 import com.dessalines.thumbkey.utils.circularDirection
 import com.dessalines.thumbkey.utils.colorVariantToColor
 import com.dessalines.thumbkey.utils.deleteWordBeforeCursor
+import com.dessalines.thumbkey.utils.detectKeyboardWideGesture
 import com.dessalines.thumbkey.utils.doneKeyAction
 import com.dessalines.thumbkey.utils.fontSizeVariantToFontSize
 import com.dessalines.thumbkey.utils.isPasswordField
@@ -150,6 +153,8 @@ fun KeyboardKey(
     clockwiseDragAction: CircularDragAction,
     counterclockwiseDragAction: CircularDragAction,
     slideHoldEnabled: Boolean,
+    keyboardGestureActions: Map<SwipeDirection, KeyAction> = emptyMap(),
+    keyboardGesturesSensitivity: Int = DEFAULT_KEYBOARD_GESTURES_SENSITIVITY,
 ) {
     // Necessary for swipe settings to get updated correctly
     val id =
@@ -158,7 +163,7 @@ fun KeyboardKey(
             slideSensitivity + slideEnabled + slideCursorMovementMode + slideSpacebarDeadzoneEnabled +
             slideBackspaceDeadzoneEnabled + dragReturnEnabled + circularDragEnabled +
             clockwiseDragAction.ordinal + counterclockwiseDragAction.ordinal +
-            slideHoldEnabled
+            slideHoldEnabled + keyboardGestureActions.hashCode() + keyboardGesturesSensitivity
 
     val ctx = LocalContext.current
     val ime = ctx as IMEService
@@ -187,6 +192,7 @@ fun KeyboardKey(
     var timeOfLastAccelerationInput by remember { mutableLongStateOf(0L) }
     var positions by remember { mutableStateOf(listOf<Offset>()) }
     var maxOffset by remember { mutableStateOf(Offset(0f, 0f)) }
+    val velocityTracker = remember { VelocityTracker() }
 
     var selection by remember { mutableStateOf(Selection()) }
 
@@ -466,8 +472,10 @@ fun KeyboardKey(
                 detectDragGestures(
                     onDragStart = {
                         isDragged.value = true
+                        velocityTracker.resetTracking()
                     },
                     onDrag = { change, dragAmount ->
+                        velocityTracker.addPosition(change.uptimeMillis, change.position)
                         change.consume()
                         val (x, y) = dragAmount
                         offsetX += x
@@ -653,6 +661,25 @@ fun KeyboardKey(
                         ) {
                             hasSlideMoveCursorTriggered = false
 
+                            // A long or fast cardinal swipe crossing out of its starting key can
+                            // trigger a keyboard-wide gesture action, which replaces the per-key
+                            // swipe actions. Slide keys are excluded while slide is enabled.
+                            val keyboardWideGestureAction =
+                                if (key.slideType == SlideType.NONE || (!slideEnabled && !slideHoldEnabled)) {
+                                    detectKeyboardWideGesture(
+                                        finalOffset = positions.lastOrNull() ?: Offset(offsetX, offsetY),
+                                        flingVelocity = velocityTracker.calculateVelocity(),
+                                        keyWidthPx = (keyWidth * key.widthMultiplier).dp.toPx(),
+                                        keyHeightPx = keyHeight.dp.toPx(),
+                                        density = density,
+                                        sensitivity = keyboardGesturesSensitivity,
+                                        minSwipeLength = minSwipeLength,
+                                        gestureActions = keyboardGestureActions,
+                                    )
+                                } else {
+                                    null
+                                }
+
                             // offset where we recognize if the swipe is back to the initial key
                             // this offset needs to take the minSwipeLength into consideration. Otherwise
                             // just a little (1px) swipe back would trigger the DragReturn action
@@ -677,7 +704,7 @@ fun KeyboardKey(
                             val maxOffsetDistance = maxOffset.getDistance().toDouble()
                             val maxOffsetBigEnough = maxOffsetDistance >= maxOffsetThreshold
                             action =
-                                (
+                                keyboardWideGestureAction ?: (
                                     if (maxOffsetBigEnough && finalOffsetSmallEnough) {
                                         (
                                             if (circularDragEnabled) {
@@ -729,6 +756,15 @@ fun KeyboardKey(
                                         )
                                     }
                                 ) ?: key.center.action
+
+                            if (keyboardWideGestureAction != null) {
+                                if (vibrateOnTap) {
+                                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                }
+                                if (soundOnTap) {
+                                    audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK, .1f)
+                                }
+                            }
 
                             performKeyAction(
                                 action = action,

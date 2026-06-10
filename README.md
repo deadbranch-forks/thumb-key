@@ -53,6 +53,7 @@
     - [Example 4](#example-4)
     - [Example 5](#example-5)
     - [Example 6](#example-6)
+    - [Keyboard-wide gestures](#keyboard-wide-gestures)
   - [Clipboard](#clipboard)
     - [Clipboard history](#clipboard-history)
     - [Private clipboard](#private-clipboard)
@@ -357,6 +358,27 @@ ENThumbKey:
 ```
 
 The attributes `swipeReturnText` and `swipeReturnAction` allow defining swipe-return behaviour. Possible values for `swipeReturnAction` are the same as the ones for `keyAction`.
+
+#### Keyboard-wide gestures
+
+A long or fast swipe in a cardinal direction that crosses out of its starting key can trigger a keyboard-wide action, replacing the swiped key's own action:
+
+```yaml
+ENThumbKey:
+  gestures:
+    west: { keyAction: DeleteWordBeforeCursor }
+    east: { keyAction: DeleteWordAfterCursor }
+    south: { keyAction: HideKeyboard }
+    rightKeyboard:
+      west: { keyAction: DeleteWordBeforeCursor }
+      east: { keyAction: Redo }
+```
+
+- `gestures` sits alongside `main`, `shifted`, etc. under a keyboard layout name, so the configuration is per-layout (YAML anchors can be used to share one block between layouts).
+- The directions are `north`, `south`, `east` and `west`; each takes a `keyAction` with the same possible values as in Example 3.
+- `leftKeyboard` and `rightKeyboard` optionally override directions for the left/right keyboard of the `Dual` keyboard position (and for the `Left`/`Right` positions). The `Center` position uses the defaults.
+- The trigger combines swipe length and lift-off speed: a short fast flick or a long slower swipe both work, and the swipe must be one fluid motion — slowing to a stop before lifting cancels it. How easily it triggers is tuned with the _keyboard-wide gesture sensitivity_ slider in the behavior settings.
+- The spacebar and backspace keys are exempt while slide or slide-hold cursor movement is enabled, and the gestures are inactive on the emoji and clipboard screens.
 
 ### Clipboard
 

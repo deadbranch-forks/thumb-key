@@ -52,6 +52,7 @@ import com.dessalines.thumbkey.db.DEFAULT_GHOST_KEYS_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_HIDE_LETTERS
 import com.dessalines.thumbkey.db.DEFAULT_HIDE_SYMBOLS
 import com.dessalines.thumbkey.db.DEFAULT_IGNORE_BOTTOM_PADDING
+import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_GESTURES_SENSITIVITY
 import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_LAYOUT
 import com.dessalines.thumbkey.db.DEFAULT_KEY_BORDER_WIDTH
 import com.dessalines.thumbkey.db.DEFAULT_KEY_HEIGHT
@@ -81,15 +82,18 @@ import com.dessalines.thumbkey.keyboards.RETURN_KEY_ITEM
 import com.dessalines.thumbkey.utils.CircularDragAction
 import com.dessalines.thumbkey.utils.ColorVariant
 import com.dessalines.thumbkey.utils.KeyAction
+import com.dessalines.thumbkey.utils.KeyboardGestureSide
 import com.dessalines.thumbkey.utils.KeyboardLayout
 import com.dessalines.thumbkey.utils.KeyboardMode
 import com.dessalines.thumbkey.utils.KeyboardPosition
 import com.dessalines.thumbkey.utils.SlideType
 import com.dessalines.thumbkey.utils.TAG
 import com.dessalines.thumbkey.utils.getAutoKeyWidth
+import com.dessalines.thumbkey.utils.getKeyboardGestures
 import com.dessalines.thumbkey.utils.getKeyboardMode
 import com.dessalines.thumbkey.utils.getModifiedKeyboardDefinition
 import com.dessalines.thumbkey.utils.keyboardPositionToAlignment
+import com.dessalines.thumbkey.utils.resolveKeyboardGestureActions
 import com.dessalines.thumbkey.utils.toBool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -121,6 +125,16 @@ fun KeyboardScreen(
         } else {
             layout.keyboardDefinition
         }
+
+    val keyboardGestures =
+        if (!keyMods.isNullOrEmpty()) {
+            getKeyboardGestures(layout, keyMods)
+        } else {
+            null
+        }
+    val keyboardGesturesSensitivity =
+        settings?.keyboardGesturesSensitivity
+            ?: DEFAULT_KEYBOARD_GESTURES_SENSITIVITY
 
     var mode by remember {
         val startMode =
@@ -742,7 +756,13 @@ fun KeyboardScreen(
             Log.d(TAG, "request for cursor updates failed, cursor updates will not be provided")
         }
 
-        val drawKeyboard = @Composable { alignment: Alignment, drawBackdrop: Boolean, positionPadding: Int ->
+        val drawKeyboard = @Composable {
+            alignment: Alignment,
+            drawBackdrop: Boolean,
+            positionPadding: Int,
+            gestureSide: KeyboardGestureSide,
+            ->
+            val gestureActions = resolveKeyboardGestureActions(keyboardGestures, gestureSide)
             val modifierPositionPadding =
                 if (positionPadding > 0) {
                     Modifier.padding(start = positionPadding.dp)
@@ -936,6 +956,8 @@ fun KeyboardScreen(
                                         clockwiseDragAction = clockwiseDragAction,
                                         counterclockwiseDragAction = counterclockwiseDragAction,
                                         slideHoldEnabled = slideHoldEnabled,
+                                        keyboardGestureActions = gestureActions,
+                                        keyboardGesturesSensitivity = keyboardGesturesSensitivity,
                                     )
                                 }
                             }
@@ -945,9 +967,18 @@ fun KeyboardScreen(
             }
         }
 
-        drawKeyboard(keyboardPositionToAlignment(position), backdropEnabled, positionPadding)
+        drawKeyboard(
+            keyboardPositionToAlignment(position),
+            backdropEnabled,
+            positionPadding,
+            when (position) {
+                KeyboardPosition.Left, KeyboardPosition.Dual -> KeyboardGestureSide.LEFT
+                KeyboardPosition.Right -> KeyboardGestureSide.RIGHT
+                KeyboardPosition.Center -> KeyboardGestureSide.DEFAULT
+            },
+        )
         if (position == KeyboardPosition.Dual) {
-            drawKeyboard(keyboardPositionToAlignment(KeyboardPosition.Right), false, positionPadding)
+            drawKeyboard(keyboardPositionToAlignment(KeyboardPosition.Right), false, positionPadding, KeyboardGestureSide.RIGHT)
         }
     }
 }

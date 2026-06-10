@@ -46,6 +46,7 @@ import com.dessalines.thumbkey.db.DEFAULT_CLOCKWISE_DRAG_ACTION
 import com.dessalines.thumbkey.db.DEFAULT_COUNTERCLOCKWISE_DRAG_ACTION
 import com.dessalines.thumbkey.db.DEFAULT_DRAG_RETURN_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_GHOST_KEYS_ENABLED
+import com.dessalines.thumbkey.db.DEFAULT_KEYBOARD_GESTURES_SENSITIVITY
 import com.dessalines.thumbkey.db.DEFAULT_MIN_SWIPE_LENGTH
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_BACKSPACE_DEADZONE_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_CURSOR_MOVEMENT_MODE
@@ -101,6 +102,10 @@ fun BehaviorScreen(
     var ghostKeysEnabledState = (settings?.ghostKeysEnabled ?: DEFAULT_GHOST_KEYS_ENABLED).toBool()
     var slideHoldEnabledState = (settings?.slideHoldEnabled ?: DEFAULT_SLIDE_HOLD_ENABLED).toBool()
 
+    var keyboardGesturesSensitivityState =
+        (settings?.keyboardGesturesSensitivity ?: DEFAULT_KEYBOARD_GESTURES_SENSITIVITY).toFloat()
+    var keyboardGesturesSensitivitySliderState by remember { mutableFloatStateOf(keyboardGesturesSensitivityState) }
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     val scrollState = rememberScrollState()
@@ -125,6 +130,7 @@ fun BehaviorScreen(
                 counterclockwiseDragAction = counterclockwiseDragActionState.ordinal,
                 ghostKeysEnabled = ghostKeysEnabledState.toInt(),
                 slideHoldEnabled = slideHoldEnabledState.toInt(),
+                keyboardGesturesSensitivity = keyboardGesturesSensitivityState.toInt(),
             ),
         )
     }
@@ -431,6 +437,36 @@ fun BehaviorScreen(
                             Icon(
                                 imageVector = Icons.Outlined.BorderInner,
                                 contentDescription = stringResource(R.string.ghost_keys_enable),
+                            )
+                        },
+                    )
+                    SettingsDivider()
+                    SliderPreference(
+                        valueRange = 1f..10f,
+                        value = keyboardGesturesSensitivityState,
+                        sliderValue = keyboardGesturesSensitivitySliderState,
+                        onSliderValueChange = { keyboardGesturesSensitivitySliderState = it },
+                        onValueChange = {
+                            keyboardGesturesSensitivityState = it
+                            updateBehavior()
+                        },
+                        title = {
+                            val keyboardGesturesSensitivityStr =
+                                stringResource(
+                                    R.string.keyboard_gestures_sensitivity,
+                                    keyboardGesturesSensitivitySliderState
+                                        .toInt()
+                                        .toString(),
+                                )
+                            Text(keyboardGesturesSensitivityStr)
+                        },
+                        summary = {
+                            Text(stringResource(R.string.keyboard_gestures_sensitivity_description))
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Swipe,
+                                contentDescription = null,
                             )
                         },
                     )
