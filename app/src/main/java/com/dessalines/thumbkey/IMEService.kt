@@ -2,7 +2,6 @@ package com.dessalines.thumbkey
 
 import android.inputmethodservice.InputMethodService
 import android.util.Log
-import android.view.View
 import android.view.inputmethod.CursorAnchorInfo
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Lifecycle
@@ -16,10 +15,14 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_HISTORY_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_DISABLE_FULLSCREEN_EDITOR
+import com.dessalines.thumbkey.db.DEFAULT_SHOW_ON_SCREEN_KEYBOARD
+import com.dessalines.thumbkey.db.DEFAULT_USE_PRIVATE_CLIPBOARD
 import com.dessalines.thumbkey.utils.KeyboardDefinition
 import com.dessalines.thumbkey.utils.KeyboardLayout
 import com.dessalines.thumbkey.utils.TAG
+import com.dessalines.thumbkey.utils.ThumbKeyClipboardManager
 import com.dessalines.thumbkey.utils.toBool
 
 class IMEService :
@@ -27,15 +30,17 @@ class IMEService :
     LifecycleOwner,
     ViewModelStoreOwner,
     SavedStateRegistryOwner {
-    private fun setupView(): View {
-        val settingsRepo = (application as ThumbkeyApplication).appSettingsRepository
+    private fun setupView(): ComposeKeyboardView {
+        val app = application as ThumbkeyApplication
+        val settingsRepo = app.appSettingsRepository
+        val clipboardRepo = app.clipboardRepository
 
         val layoutIndex = settingsRepo.appSettings.value?.keyboardLayout
         if (layoutIndex != null) {
             currentKeyboardDefinition = KeyboardLayout.entries[layoutIndex].keyboardDefinition
         }
 
-        val view = ComposeKeyboardView(this, settingsRepo)
+        val view = ComposeKeyboardView(this, settingsRepo, clipboardRepo)
         window?.window?.decorView?.let { decorView ->
             decorView.setViewTreeLifecycleOwner(this)
             decorView.setViewTreeViewModelStoreOwner(this)
@@ -50,6 +55,7 @@ class IMEService :
     }
 
     var currentKeyboardDefinition: KeyboardDefinition? = null
+    private var clipboardManager: ThumbKeyClipboardManager? = null
 
     /**
      * This is called every time the keyboard is brought up.
@@ -75,9 +81,17 @@ class IMEService :
         super.onCreate()
         savedStateRegistryController.performRestore(null)
         handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+
+        // Initialize clipboard manager
+        val app = application as ThumbkeyApplication
+        clipboardManager = ThumbKeyClipboardManager(this, app.clipboardRepository)
+        clipboardManager?.startListening()
+        clipboardManager?.clearExpired()
     }
 
     override fun onDestroy() {
+        clipboardManager?.stopListening()
+        clipboardManager = null
         super.onDestroy()
         handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     }
@@ -106,6 +120,19 @@ class IMEService :
 
         selectionStart = cursorAnchorInfo.selectionStart
         selectionEnd = cursorAnchorInfo.selectionEnd
+    }
+
+    override fun onEvaluateInputViewShown(): Boolean {
+        val settingsRepo = (application as ThumbkeyApplication).appSettingsRepository
+        val settings = settingsRepo.appSettings.getValue()
+        val showOnScreenKeyboard =
+            (settings?.showOnScreenKeyboard ?: DEFAULT_SHOW_ON_SCREEN_KEYBOARD).toBool()
+
+        // Always call super implementation because Android docs says:
+        // "If you override this method you must call through to the superclass implementation."
+        // https://developer.android.com/reference/android/inputmethodservice/InputMethodService#onEvaluateInputViewShown()
+        return super.onEvaluateInputViewShown() ||
+            showOnScreenKeyboard
     }
 
     // Disable the fullscreen text editor if set by the user
@@ -143,4 +170,18 @@ class IMEService :
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
     override val savedStateRegistry: SavedStateRegistry =
         savedStateRegistryController.savedStateRegistry
+
+    fun clipboardUsePrivate(): Boolean {
+        val settingsRepo = (application as ThumbkeyApplication).appSettingsRepository
+        val settings = settingsRepo.appSettings.getValue()
+        val clipboardHistoryEnabled = (settings?.clipboardHistoryEnabled ?: DEFAULT_CLIPBOARD_HISTORY_ENABLED).toBool()
+        val usePrivateClipboard = (settings?.usePrivateClipboard ?: DEFAULT_USE_PRIVATE_CLIPBOARD).toBool()
+        return clipboardHistoryEnabled && usePrivateClipboard
+    }
+
+    fun clipboardAddPrivateClip(text: String): Unit? = clipboardManager?.addPrivateClip(text)
+
+    fun clipboardWasLastCopyDoneViaSystem(): Boolean = clipboardManager?.wasLastCopyOperationDoneViaSystem() ?: true
+
+    fun clipboardGetLastClip(): String? = clipboardManager?.getLastClip()
 }

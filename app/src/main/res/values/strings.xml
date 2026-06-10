@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Thumb-Key</string>
+    <string name="app_name" translatable="false">Thumb-Key</string>
     <string name="settings">Settings</string>
     <string name="system">System</string>
     <string name="light">Light</string>
@@ -40,6 +40,7 @@
     <string name="theme">Theme</string>
     <string name="theme_color">Theme color</string>
     <string name="position">Position</string>
+    <string name="position_padding">Position padding: %1$s</string>
     <string name="vibrate_on_tap">Vibrate on tap</string>
     <string name="vibrate_warning">Requires touch feedback to be enabled in system settings</string>
     <string name="vibrate_on_slide">Vibrate for slide gestures</string>
@@ -93,11 +94,13 @@
     <string name="circular_drag_enable">Circular drag</string>
     <string name="ghost_keys_enable">Ghost keys</string>
     <string name="ghost_keys_description">Access hidden symbol keys without switching to numeric view</string>
+    <string name="slide_hold_enable">Slide-hold cursor movement</string>
+    <string name="slide_hold_description">Slide and hold to repeat cursor movement, slide-return-hold for word movement. Backspace: slide-hold to repeat delete, slide-return-hold for word delete.</string>
     <string name="backup_database">Backup database</string>
     <string name="restore_database">Restore database</string>
     <string name="restore_database_warning">Warning: This will clear out your current database</string>
-    <string name="database_restored">Database Restored.</string>
     <string name="database_backed_up">Database Backed up.</string>
+    <string name="database_operation_failed">Operation failed: %1$s</string>
     <string name="backup_and_restore">Backup and restore</string>
     <string name="modify_keys">Modify keys</string>
     <string name="key_modification_placeholder">Enter YAML</string>
@@ -105,4 +108,42 @@
     <string name="ignore_bottom_padding">Ignore bottom padding</string>
     <string name="show_toast_on_layout_switch">Show toast on layout switch</string>
     <string name="disable_fullscreen_editor">Disable fullscreen text editor</string>
+    <string name="warning_invalid_mode">Mode \"%s\" is not defined for layout \"%s\".</string>
+    <!-- Clipboard History -->
+    <string name="clipboard_history">Clipboard history</string>
+    <string name="clipboard_history_enabled">Enable clipboard history</string>
+    <string name="clipboard_history_enabled_description">Store copied text for quick access</string>
+    <string name="clipboard_auto_cleanup">Auto-cleanup old clips</string>
+    <string name="clipboard_auto_cleanup_description">Automatically remove old unpinned clips</string>
+    <string name="clipboard_cleanup_after">Cleanup after %1$s</string>
+    <string name="duration_5_minutes">5 minutes</string>
+    <string name="duration_10_minutes">10 minutes</string>
+    <string name="duration_30_minutes">30 minutes</string>
+    <string name="duration_1_hour">1 hour</string>
+    <string name="duration_2_hours">2 hours</string>
+    <string name="duration_4_hours">4 hours</string>
+    <string name="duration_12_hours">12 hours</string>
+    <string name="duration_1_day">1 day</string>
+    <string name="duration_2_days">2 days</string>
+    <string name="duration_4_days">4 days</string>
+    <string name="duration_7_days">7 days</string>
+    <string name="clipboard_size_limit">Limit history size</string>
+    <string name="clipboard_size_limit_description">Remove oldest clips when limit is reached</string>
+    <string name="clipboard_max_size">Max history size: %1$d</string>
+    <string name="clipboard_clear_all">Clear all</string>
+    <string name="clipboard_back">Back</string>
+    <string name="clipboard_pin">Pin</string>
+    <string name="clipboard_unpin">Unpin</string>
+    <string name="clipboard_delete">Delete</string>
+    <string name="clipboard_paste">Paste</string>
+    <string name="clipboard_empty">Clipboard is empty</string>
+    <string name="clipboard_disabled">Clipboard history is disabled</string>
+    <string name="clipboard_go_to_settings">Go to clipboard settings</string>
+    <string name="clipboard_characters">%1$d characters</string>
+    <string name="use_private_clipboard">Use private clipboard</string>
+    <string name="use_private_clipboard_description">Copy into internal clipboard instead of system clipboard"</string>
+    <!-- Other -->
+    <string name="other">Other</string>
+    <string name="show_on_screen_keyboard">Show on-screen keyboard</string>
+    <string name="show_on_screen_keyboard_description">Show on-screen keyboard while using physical keyboard</string>
 </resources>

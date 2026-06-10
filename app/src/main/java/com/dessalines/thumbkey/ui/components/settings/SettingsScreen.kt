@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpCenter
 import androidx.compose.material.icons.outlined.AppRegistration
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.InstallMobile
 import androidx.compose.material.icons.outlined.KeyboardAlt
@@ -153,6 +155,16 @@ fun SettingsScreen(
                         onClick = { navController.navigate("behavior") },
                     )
                     Preference(
+                        title = { Text(stringResource(R.string.clipboard_history)) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.ContentPaste,
+                                contentDescription = null,
+                            )
+                        },
+                        onClick = { navController.navigate("clipboardSettings") },
+                    )
+                    Preference(
                         title = {
                             Text(
                                 text = stringResource(R.string.modify_keys),
@@ -175,6 +187,16 @@ fun SettingsScreen(
                             )
                         },
                         onClick = { navController.navigate("backupAndRestore") },
+                    )
+                    Preference(
+                        title = { Text(stringResource(R.string.other)) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Build,
+                                contentDescription = null,
+                            )
+                        },
+                        onClick = { navController.navigate("otherSettings") },
                     )
                     Preference(
                         title = { Text(stringResource(R.string.user_guide)) },

@@ -1,3 +1,106 @@
+## What's Changed in 5.1.9
+
+- New layout for Sakha (sah) language based on Thumb-Key Writer by @kyraha in [#1879](https://github.com/dessalines/thumb-key/pull/1879)
+- Normalize characters in the European layout (#1828) by @marekjm in [#1873](https://github.com/dessalines/thumb-key/pull/1873)
+
+## New Contributors
+
+- @kyraha made their first contribution in [#1879](https://github.com/dessalines/thumb-key/pull/1879)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.8...5.1.9
+
+## What's Changed in 5.1.8
+
+- fix: handle null case when getting selected text content via java cla… by @Elnix90 in [#1867](https://github.com/dessalines/thumb-key/pull/1867)
+- Add slide+hold cursor navigation by @Toldry in [#1848](https://github.com/dessalines/thumb-key/pull/1848)
+- Fixed incorrect swipeType in bottom left and right keys on NOThumbKeyDataDriven by @DoubledChimp44 in [#1852](https://github.com/dessalines/thumb-key/pull/1852)
+
+## New Contributors
+
+- @Elnix90 made their first contribution in [#1867](https://github.com/dessalines/thumb-key/pull/1867)
+- @DoubledChimp44 made their first contribution in [#1852](https://github.com/dessalines/thumb-key/pull/1852)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.7...5.1.8
+
+## What's Changed in 5.1.7
+
+- Adding freedroidwarn by @dessalines in [#1840](https://github.com/dessalines/thumb-key/pull/1840)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.6...5.1.7
+
+## What's Changed in 5.1.6
+
+- feat: add "show on-screen keyboard" setting by @Toldry in [#1834](https://github.com/dessalines/thumb-key/pull/1834)
+- feat: Add DeleteViaTextManipulation key action for apps that ignore KEYCODE_DEL by @brendanlong in [#1833](https://github.com/dessalines/thumb-key/pull/1833)
+- Update README examples to set `swipeType` by @mjkelly in [#1824](https://github.com/dessalines/thumb-key/pull/1824)
+
+## New Contributors
+
+- @brendanlong made their first contribution in [#1833](https://github.com/dessalines/thumb-key/pull/1833)
+- @mjkelly made their first contribution in [#1824](https://github.com/dessalines/thumb-key/pull/1824)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.5...5.1.6
+
+## What's Changed in 5.1.5
+
+- Revert "Spellcheck locale fix" by @dessalines in [#1819](https://github.com/dessalines/thumb-key/pull/1819)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.4...5.1.5
+
+## What's Changed in 5.1.4
+
+- Add private clipboard option by @jiquiame in [#1762](https://github.com/dessalines/thumb-key/pull/1762)
+- Spellcheck locale fix by @markokocic in [#1774](https://github.com/dessalines/thumb-key/pull/1774)
+- frappefluide: add k and 2 3 as super/subscripts to numeric layer by @jiquiame in [#1803](https://github.com/dessalines/thumb-key/pull/1803)
+- Macron compose by @IFcoltransG in [#1785](https://github.com/dessalines/thumb-key/pull/1785)
+
+## New Contributors
+
+- @IFcoltransG made their first contribution in [#1785](https://github.com/dessalines/thumb-key/pull/1785)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.3...5.1.4
+
+## What's Changed in 5.1.3
+
+- Removing non-final res ids. by @dessalines in [#1784](https://github.com/dessalines/thumb-key/pull/1784)
+- fix katakana->hiragana by @K0baU in [#1781](https://github.com/dessalines/thumb-key/pull/1781)
+- fix long press haptics by @Toldry in [#1779](https://github.com/dessalines/thumb-key/pull/1779)
+- Fix crash when select line from first character of text field by @jiquiame in [#1763](https://github.com/dessalines/thumb-key/pull/1763)
+- fix clipboard history settings back not working by @Toldry in [#1761](https://github.com/dessalines/thumb-key/pull/1761)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.2...5.1.3
+
+## What's Changed in 5.1.2
+
+- Fixing gradle.properties nonFinalResIds by @dessalines
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.1...5.1.2
+
+## What's Changed in 5.1.1
+
+- Add keyboard position padding for horizontal positioning by @jiquiame in [#1753](https://github.com/dessalines/thumb-key/pull/1753)
+- fix debug app name override by translations by @Toldry in [#1758](https://github.com/dessalines/thumb-key/pull/1758)
+- Adding swipe return gesture on select all key to select current line. by @dessalines in [#1757](https://github.com/dessalines/thumb-key/pull/1757)
+- Frappefluide: fix nbspaces for french quotes by @jiquiame in [#1756](https://github.com/dessalines/thumb-key/pull/1756)
+- Add action to select current line by @jiquiame in [#1752](https://github.com/dessalines/thumb-key/pull/1752)
+- Fix crash when using ToggleCtrlMode/ToggleAltMode when not defined by @emallery in [#1745](https://github.com/dessalines/thumb-key/pull/1745)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.1.0...5.1.1
+
+## What's Changed in 5.1.0
+
+- Add clipboard history feature by @Toldry in [#1737](https://github.com/dessalines/thumb-key/pull/1737)
+- Fix ToggleCapsLock key doing nothing in non-shifted mode by @emallery in [#1738](https://github.com/dessalines/thumb-key/pull/1738)
+- Add hungarian-optimized engram layout by @dwat3r in [#1732](https://github.com/dessalines/thumb-key/pull/1732)
+- Correct a mistake in JAKanaStandard.kt by @K0baU in [#1734](https://github.com/dessalines/thumb-key/pull/1734)
+- add NOOP action by @Toldry in [#1731](https://github.com/dessalines/thumb-key/pull/1731)
+
+## New Contributors
+
+- @dwat3r made their first contribution in [#1732](https://github.com/dessalines/thumb-key/pull/1732)
+
+**Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.0.14...5.1.0
+
 ## What's Changed in 5.0.14
 
 - Update FRENFrappeFluideV1: move voice to avoid misentering delete word by @jiquiame in [#1730](https://github.com/dessalines/thumb-key/pull/1730)
@@ -106,7 +209,7 @@
 ## What's Changed in 5.0.7
 
 - Add Korean layout and custom input processor implementation by @uranium-boy in [#1534](https://github.com/dessalines/thumb-key/pull/1534)
-- Update README.md by @jwkwshjsjsj in [#1531](https://github.com/dessalines/thumb-key/pull/1531)
+- Update README.md in [#1531](https://github.com/dessalines/thumb-key/pull/1531)
 - Verify apk fingerprint. by @dessalines in [#1528](https://github.com/dessalines/thumb-key/pull/1528)
 - English based Latvian keyboard by @HX3A in [#1522](https://github.com/dessalines/thumb-key/pull/1522)
 - downgrade agp version (closes #1514) by @pohmelie in [#1521](https://github.com/dessalines/thumb-key/pull/1521)
@@ -115,7 +218,6 @@
 ## New Contributors
 
 - @uranium-boy made their first contribution in [#1534](https://github.com/dessalines/thumb-key/pull/1534)
-- @jwkwshjsjsj made their first contribution in [#1531](https://github.com/dessalines/thumb-key/pull/1531)
 - @HX3A made their first contribution in [#1522](https://github.com/dessalines/thumb-key/pull/1522)
 
 **Full Changelog**: https://github.com/dessalines/thumb-key/compare/5.0.6...5.0.7
@@ -292,7 +394,7 @@
 
 ## What's Changed in 4.0.27
 
-- Update Hyper's symbol layer with small changes by @luminespire in [#1340](https://github.com/dessalines/thumb-key/pull/1340)
+- Update Hyper's symbol layer with small changes by @va1orance in [#1340](https://github.com/dessalines/thumb-key/pull/1340)
 - feat: add owl-layout by @owl-from-hogvarts in [#1337](https://github.com/dessalines/thumb-key/pull/1337)
 - Translated using Weblate (Arabic) by @weblate
 - Translated using Weblate (Polish) by @weblate
@@ -354,7 +456,7 @@
 
 ## What's Changed in 4.0.23
 
-- Update Hyper symbol layer and punctuation by @luminespire in [#1293](https://github.com/dessalines/thumb-key/pull/1293)
+- Update Hyper symbol layer and punctuation by @va1orance in [#1293](https://github.com/dessalines/thumb-key/pull/1293)
 - Update old br-fr keyboards and create a new BRFRThumbKeyV3 by @zeecho in [#1290](https://github.com/dessalines/thumb-key/pull/1290)
 - Draft: use minSwipeLength setting for DragReturn and Circular detection by @stfstf123 in [#1244](https://github.com/dessalines/thumb-key/pull/1244)
 
@@ -384,7 +486,7 @@
 
 - Slight tweaks to en typesplit programming layout by @bklaase in [#1274](https://github.com/dessalines/thumb-key/pull/1274)
 - add English Typesplit layout, optimized for programming by @bklaase in [#1272](https://github.com/dessalines/thumb-key/pull/1272)
-- add hyper space and minor fixes to hyper by @luminespire in [#1268](https://github.com/dessalines/thumb-key/pull/1268)
+- add hyper space and minor fixes to hyper by @va1orance in [#1268](https://github.com/dessalines/thumb-key/pull/1268)
 - Add layout with words and common symbols by @jm355 in [#1262](https://github.com/dessalines/thumb-key/pull/1262)
 - Update README.md to include other voice input option (transcribro) by @jm355 in [#1263](https://github.com/dessalines/thumb-key/pull/1263)
 
@@ -392,11 +494,11 @@
 
 ## What's Changed in 4.0.19
 
-- add hyper layout by @luminespire in [#1260](https://github.com/dessalines/thumb-key/pull/1260)
+- add hyper layout by @va1orance in [#1260](https://github.com/dessalines/thumb-key/pull/1260)
 
 ## New Contributors
 
-- @luminespire made their first contribution in [#1260](https://github.com/dessalines/thumb-key/pull/1260)
+- @va1orance made their first contribution in [#1260](https://github.com/dessalines/thumb-key/pull/1260)
 
 **Full Changelog**: https://github.com/dessalines/thumb-key/compare/4.0.18...4.0.19
 
@@ -1371,10 +1473,14 @@
 - Scaling down uppercase letters. Fixes #109 by @dessalines in [#611](https://github.com/dessalines/thumb-key/pull/611)
 - Added Italian translation by @flauta in [#610](https://github.com/dessalines/thumb-key/pull/610)
 - Upgrading compose to 1.5.7 by @dessalines in [#609](https://github.com/dessalines/thumb-key/pull/609)
-- double symbols prototype in [#608](https://github.com/dessalines/thumb-key/pull/608)
+- double symbols prototype by @alensiljak in [#608](https://github.com/dessalines/thumb-key/pull/608)
 - Adding svenska messageease. Fixes #601 by @dessalines in [#605](https://github.com/dessalines/thumb-key/pull/605)
 - Update ITThumbKey.kt by @flauta in [#603](https://github.com/dessalines/thumb-key/pull/603)
 - Adding release notes. by @dessalines
+
+## New Contributors
+
+- @alensiljak made their first contribution in [#608](https://github.com/dessalines/thumb-key/pull/608)
 
 **Full Changelog**: https://github.com/dessalines/thumb-key/compare/2.6.5...2.6.6
 

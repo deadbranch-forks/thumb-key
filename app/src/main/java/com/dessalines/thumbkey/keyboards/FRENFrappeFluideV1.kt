@@ -10,6 +10,13 @@ import com.dessalines.thumbkey.utils.FontSizeVariant.*
 import com.dessalines.thumbkey.utils.KeyAction.*
 import com.dessalines.thumbkey.utils.SwipeNWay.*
 
+val SELECT_LINE_WITH_CURSOR_KEYC =
+    KeyC(
+        action = SelectLineWithCursor,
+        display = KeyDisplay.TextDisplay("<>"),
+        color = MUTED,
+    )
+
 val DELETE_WORD_BEFORE_CURSOR_TEXT_KEYC =
     KeyC(
         action = DeleteWordBeforeCursor,
@@ -22,6 +29,7 @@ fun specialActionKeyItemCustom(center: KeyC): KeyItemC =
         backgroundColor = SURFACE_VARIANT,
         swipeType = EIGHT_WAY,
         center = center,
+        topLeft = SELECT_LINE_WITH_CURSOR_KEYC,
         // topLeft = MOVE_KEYBOARD_CYCLE_RIGHT_KEYC,
         top = GOTO_SETTINGS_KEYC,
         bottom = SWITCH_IME_KEYC,
@@ -152,7 +160,7 @@ val KB_FR_EN_FRAPPE_FLUIDE_V1_MAIN =
                     topRight = KeyC("ch", color = MUTED),
                     left = KeyC("“", color = MUTED),
                     right = KeyC("=", color = MUTED),
-                    bottomLeft = KeyC("« ", displayText = "«", color = MUTED),
+                    bottomLeft = KeyC("« ", displayText = "«", color = MUTED),
                     bottom = KeyC("!", color = MUTED),
                     bottomRight = KeyC("?", color = MUTED),
                 ),
@@ -176,7 +184,7 @@ val KB_FR_EN_FRAPPE_FLUIDE_V1_MAIN =
                     right = KeyC("”", color = MUTED),
                     bottomLeft = KeyC("…", color = MUTED),
                     bottom = KeyC("_", color = MUTED),
-                    bottomRight = KeyC(" »", displayText = "»", color = MUTED),
+                    bottomRight = KeyC(" »", displayText = "»", color = MUTED),
                 ),
                 BACKSPACE_KEY_ITEM,
             ),
@@ -282,7 +290,7 @@ val KB_FR_EN_FRAPPE_FLUIDE_V1_SHIFTED =
                     topRight = KeyC("Ch", color = MUTED),
                     left = KeyC("“", color = MUTED),
                     right = KeyC("=", color = MUTED),
-                    bottomLeft = KeyC("« ", displayText = "«", color = MUTED),
+                    bottomLeft = KeyC("« ", displayText = "«", color = MUTED),
                     bottom = KeyC("!", color = MUTED),
                     bottomRight = KeyC("?", color = MUTED),
                 ),
@@ -306,7 +314,7 @@ val KB_FR_EN_FRAPPE_FLUIDE_V1_SHIFTED =
                     right = KeyC("”", color = MUTED),
                     bottomLeft = KeyC("…", color = MUTED),
                     bottom = KeyC("_", color = MUTED),
-                    bottomRight = KeyC(" »", displayText = "»", color = MUTED),
+                    bottomRight = KeyC(" »", displayText = "»", color = MUTED),
                 ),
                 BACKSPACE_KEY_ITEM,
             ),
@@ -357,12 +365,17 @@ val FRENCH_FLUID_NUMERIC_KEYBOARD =
                 KeyItemC(
                     center = KeyC("4", size = LARGE),
                     topLeft = KeyC("\\"),
+                    top = KeyC("²"),
+                    topRight = KeyC("³"),
                     left = KeyC("("),
+                    right = KeyC("₂"),
                     bottomLeft = KeyC("\u202F", displayText = "⍽", size = SMALLEST),
                     bottom = KeyC("{"),
+                    bottomRight = KeyC("₃"),
                 ),
                 KeyItemC(
                     center = KeyC("5", size = LARGE),
+                    topLeft = KeyC("k"),
                     topRight = KeyC("¥"),
                     left = KeyC("‰"),
                     right = KeyC("$"),
@@ -387,7 +400,7 @@ val FRENCH_FLUID_NUMERIC_KEYBOARD =
                     top = KeyC("„"),
                     left = KeyC("“"),
                     right = KeyC("="),
-                    bottomLeft = KeyC("« ", displayText = "«"),
+                    bottomLeft = KeyC("« ", displayText = "«"),
                     bottom = KeyC("!"),
                     bottomRight = KeyC("?"),
                 ),
@@ -409,7 +422,7 @@ val FRENCH_FLUID_NUMERIC_KEYBOARD =
                     right = KeyC("”"),
                     bottomLeft = KeyC("…"),
                     bottom = KeyC("_"),
-                    bottomRight = KeyC(" »", displayText = "»"),
+                    bottomRight = KeyC(" »", displayText = "»"),
                 ),
                 BACKSPACE_KEY_ITEM,
             ),

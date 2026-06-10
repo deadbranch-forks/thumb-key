@@ -15,6 +15,7 @@ data class KeyboardDefinitionModes(
     val numeric: KeyboardC,
     val ctrled: KeyboardC? = null,
     val alted: KeyboardC? = null,
+    val emoji: KeyboardC? = null,
 ) {
     companion object
 }
@@ -217,8 +218,17 @@ sealed class KeyAction {
         val enable: Boolean,
     ) : KeyAction()
 
+    class ToggleClipboardMode(
+        val enable: Boolean,
+    ) : KeyAction()
+
     class ComposeLastKey(
         val text: String,
+    ) : KeyAction()
+
+    class NormalizeLastKey(
+        val text: String,
+        val form: java.text.Normalizer.Form? = java.text.Normalizer.Form.NFC,
     ) : KeyAction()
 
     class SmartQuotes(
@@ -242,6 +252,8 @@ sealed class KeyAction {
 
     data object DeleteKeyAction : KeyAction()
 
+    data object DeleteViaTextManipulation : KeyAction()
+
     data object DeleteWordBeforeCursor : KeyAction()
 
     data object DeleteWordAfterCursor : KeyAction()
@@ -249,6 +261,8 @@ sealed class KeyAction {
     data object PreviousWordBeforeCursor : KeyAction()
 
     data object NextWordAfterCursor : KeyAction()
+
+    data object SelectLineWithCursor : KeyAction()
 
     data object GotoSettings : KeyAction()
 
@@ -269,6 +283,14 @@ sealed class KeyAction {
     data object Undo : KeyAction()
 
     data object Redo : KeyAction()
+
+    data object CursorToLineStart : KeyAction()
+
+    data object CursorToLineEnd : KeyAction()
+
+    data object CursorToTextStart : KeyAction()
+
+    data object CursorToTextEnd : KeyAction()
 
     data object SwitchLanguage : KeyAction()
 
@@ -297,6 +319,7 @@ enum class KeyboardMode {
     EMOJI,
     CTRLED,
     ALTED,
+    CLIPBOARD,
 }
 
 enum class SwipeDirection {

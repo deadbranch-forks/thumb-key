@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,11 @@ import com.dessalines.thumbkey.db.DEFAULT_AUTO_CAPITALIZE
 import com.dessalines.thumbkey.db.DEFAULT_AUTO_SIZE_KEYS
 import com.dessalines.thumbkey.db.DEFAULT_BACKDROP_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_CIRCULAR_DRAG_ENABLED
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_AUTO_CLEANUP_ENABLED
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_CLEANUP_AFTER_MINUTES
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_HISTORY_ENABLED
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_MAX_SIZE
+import com.dessalines.thumbkey.db.DEFAULT_CLIPBOARD_SIZE_LIMIT_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_CLOCKWISE_DRAG_ACTION
 import com.dessalines.thumbkey.db.DEFAULT_COUNTERCLOCKWISE_DRAG_ACTION
 import com.dessalines.thumbkey.db.DEFAULT_DISABLE_FULLSCREEN_EDITOR
@@ -59,25 +65,33 @@ import com.dessalines.thumbkey.db.DEFAULT_KEY_WIDTH
 import com.dessalines.thumbkey.db.DEFAULT_MIN_SWIPE_LENGTH
 import com.dessalines.thumbkey.db.DEFAULT_NON_SQUARE_KEYS
 import com.dessalines.thumbkey.db.DEFAULT_POSITION
+import com.dessalines.thumbkey.db.DEFAULT_POSITION_PADDING
 import com.dessalines.thumbkey.db.DEFAULT_PUSHUP_SIZE
+import com.dessalines.thumbkey.db.DEFAULT_SHOW_ON_SCREEN_KEYBOARD
 import com.dessalines.thumbkey.db.DEFAULT_SHOW_TOAST_ON_LAYOUT_SWITCH
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_BACKSPACE_DEADZONE_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_CURSOR_MOVEMENT_MODE
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_ENABLED
+import com.dessalines.thumbkey.db.DEFAULT_SLIDE_HOLD_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_SENSITIVITY
 import com.dessalines.thumbkey.db.DEFAULT_SLIDE_SPACEBAR_DEADZONE_ENABLED
 import com.dessalines.thumbkey.db.DEFAULT_SOUND_ON_TAP
 import com.dessalines.thumbkey.db.DEFAULT_SPACEBAR_MULTITAPS
 import com.dessalines.thumbkey.db.DEFAULT_THEME
 import com.dessalines.thumbkey.db.DEFAULT_THEME_COLOR
+import com.dessalines.thumbkey.db.DEFAULT_USE_PRIVATE_CLIPBOARD
 import com.dessalines.thumbkey.db.DEFAULT_VIBRATE_ON_SLIDE
 import com.dessalines.thumbkey.db.DEFAULT_VIBRATE_ON_TAP
 import com.dessalines.thumbkey.utils.SimpleTopAppBar
 import com.dessalines.thumbkey.utils.keyboardLayoutsSetFromDbIndexString
 import com.dessalines.thumbkey.utils.updateLayouts
 import com.roomdbexportimport.RoomDBExportImport
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceTheme
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,23 +102,35 @@ fun BackupAndRestoreScreen(
     Log.d("thumb key", "Got to Backup and Restore screen")
 
     val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     var showConfirmResetDialog by remember { mutableStateOf(false) }
 
-    val dbSavedText = stringResource(R.string.database_backed_up)
-    val dbRestoredText = stringResource(R.string.database_restored)
-
     val dbHelper = RoomDBExportImport(AppDB.getDatabase(ctx).openHelper)
+
+    val backedUpMsg = stringResource(R.string.database_backed_up)
+    val operationFailedTemplate = stringResource(R.string.database_operation_failed)
 
     val exportDbLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.CreateDocument("application/zip"),
         ) {
-            it?.also {
+            it?.also { uri ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    dbHelper.export(ctx, it)
-                    Toast.makeText(ctx, dbSavedText, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        withContext(Dispatchers.IO) { dbHelper.export(ctx, uri) }
+                            .onSuccess {
+                                Toast.makeText(ctx, backedUpMsg, Toast.LENGTH_SHORT).show()
+                            }.onFailure {
+                                Toast
+                                    .makeText(
+                                        ctx,
+                                        operationFailedTemplate.format(it.message ?: it.stackTraceToString()),
+                                        Toast.LENGTH_LONG,
+                                    ).show()
+                            }
+                    }
                 }
             }
         }
@@ -113,10 +139,19 @@ fun BackupAndRestoreScreen(
         rememberLauncherForActivityResult(
             ActivityResultContracts.OpenDocument(),
         ) {
-            it?.also {
+            it?.also { uri ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    dbHelper.import(ctx, it, true)
-                    Toast.makeText(ctx, dbRestoredText, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        withContext(Dispatchers.IO) { dbHelper.import(ctx, uri, true) }
+                            .onFailure {
+                                Toast
+                                    .makeText(
+                                        ctx,
+                                        operationFailedTemplate.format(it.message ?: it.stackTraceToString()),
+                                        Toast.LENGTH_LONG,
+                                    ).show()
+                            }
+                    }
                 }
             }
         }
@@ -178,7 +213,13 @@ fun BackupAndRestoreScreen(
                             )
                         },
                         onClick = {
-                            exportDbLauncher.launch("thumb-key")
+                            val filename =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    "${LocalDate.now()}-thumb-key.zip"
+                                } else {
+                                    "thumb-key.zip"
+                                }
+                            exportDbLauncher.launch(filename)
                         },
                     )
                     Preference(
@@ -233,6 +274,7 @@ private fun resetAppSettingsToDefault(appSettingsViewModel: AppSettingsViewModel
             slideSensitivity = DEFAULT_SLIDE_SENSITIVITY,
             soundOnTap = DEFAULT_SOUND_ON_TAP,
             position = DEFAULT_POSITION,
+            positionPadding = DEFAULT_POSITION_PADDING,
             pushupSize = DEFAULT_PUSHUP_SIZE,
             minSwipeLength = DEFAULT_MIN_SWIPE_LENGTH,
             keyboardLayout = DEFAULT_KEYBOARD_LAYOUT,
@@ -264,6 +306,14 @@ private fun resetAppSettingsToDefault(appSettingsViewModel: AppSettingsViewModel
             ignoreBottomPadding = DEFAULT_IGNORE_BOTTOM_PADDING,
             showToastOnLayoutSwitch = DEFAULT_SHOW_TOAST_ON_LAYOUT_SWITCH,
             disableFullscreenEditor = DEFAULT_DISABLE_FULLSCREEN_EDITOR,
+            clipboardHistoryEnabled = DEFAULT_CLIPBOARD_HISTORY_ENABLED,
+            clipboardAutoCleanupEnabled = DEFAULT_CLIPBOARD_AUTO_CLEANUP_ENABLED,
+            clipboardCleanupAfterMinutes = DEFAULT_CLIPBOARD_CLEANUP_AFTER_MINUTES,
+            clipboardSizeLimitEnabled = DEFAULT_CLIPBOARD_SIZE_LIMIT_ENABLED,
+            clipboardMaxSize = DEFAULT_CLIPBOARD_MAX_SIZE,
+            usePrivateClipboard = DEFAULT_USE_PRIVATE_CLIPBOARD,
+            showOnScreenKeyboard = DEFAULT_SHOW_ON_SCREEN_KEYBOARD,
+            slideHoldEnabled = DEFAULT_SLIDE_HOLD_ENABLED,
         ),
     )
 }

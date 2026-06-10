@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Thumb-Key</string>
     <string name="settings">Nastavitve</string>
     <string name="system">Sistem</string>
     <string name="light">Svetli</string>
@@ -39,7 +38,7 @@
     <string name="layouts">Razporeditve</string>
     <string name="theme">Barvni način</string>
     <string name="theme_color">Barvna shema</string>
-    <string name="position">Pozicija</string>
+    <string name="position">Poravnava tipkovnice</string>
     <string name="vibrate_on_tap">Vibriraj ob pritisku tipke</string>
     <string name="vibrate_warning">Haptični odziv mora biti omogočen v sistemskih nastavitvah</string>
     <string name="play_sound_on_tap">Zvok ob dotiku tipke</string>
@@ -77,7 +76,7 @@
     <string name="hide_letters">Skrij črke</string>
     <string name="hide_symbols">Skrij simbole</string>
     <string name="spacebar_multitaps">Večkratni dotik preslednice</string>
-    <string name="done">Končaj</string>
+    <string name="done">Zapri</string>
     <string name="backdrop">Ozadje tipkovnice</string>
     <string name="key_padding">Razmak med tipkami: %1$s</string>
     <string name="key_border_width">Debelina roba tipk: %1$s</string>
@@ -93,7 +92,6 @@
     <string name="backup_database">Shrani varnostno kopijo</string>
     <string name="restore_database">Obnovi iz varnostne kopije</string>
     <string name="restore_database_warning">Pozor: Obnovitev bo prepisala trenutne nastavitve</string>
-    <string name="database_restored">Obnovitev je končana.</string>
     <string name="database_backed_up">Varnostna kopija je shranjena.</string>
     <string name="backup_and_restore">Varnostna kopija in obnovitev</string>
     <string name="modify_keys">Uredi tipke</string>
@@ -102,4 +100,46 @@
     <string name="ignore_bottom_padding">Ne upoštevaj spodnjega odmika</string>
     <string name="show_toast_on_layout_switch">Prikaži sporočilo ob spremembi tipkovnice</string>
     <string name="disable_fullscreen_editor">Onemogoči celozaslonski urejevalnik</string>
+    <string name="vibrate_on_slide">Vibriraj ob drsanju</string>
+    <string name="vibrate_slide_note">Velja za drsanje po preslednici ali vračalki</string>
+    <string name="vibrate_slide_warning">Kretnje pri drsanju morajo biti omogočene v nastavitvah (Obnašanje)</string>
+    <string name="clipboard_characters">Št. znakov: %1$d</string>
+    <string name="clipboard_history">Zgodovina odložišča</string>
+    <string name="clipboard_history_enabled">Omogoči zgodovino odložišča</string>
+    <string name="clipboard_history_enabled_description">Shrani kopirano besedilo za hitri dostop</string>
+    <string name="clipboard_auto_cleanup">Samodejno počisti vnose</string>
+    <string name="clipboard_auto_cleanup_description">Samodejno odstrani nepripete vnose</string>
+    <string name="clipboard_cleanup_after">Odstrani vnos po %1$s</string>
+    <string name="duration_5_minutes">5 minutah</string>
+    <string name="duration_10_minutes">10 minutah</string>
+    <string name="duration_30_minutes">30 minutah</string>
+    <string name="duration_1_hour">1 uri</string>
+    <string name="duration_2_hours">2 urah</string>
+    <string name="duration_4_hours">4 urah</string>
+    <string name="duration_12_hours">12 urah</string>
+    <string name="duration_1_day">1 dnevu</string>
+    <string name="duration_2_days">2 dnevih</string>
+    <string name="duration_4_days">4 dnevih</string>
+    <string name="duration_7_days">7 dnevih</string>
+    <string name="clipboard_size_limit">Omeji število vnosov</string>
+    <string name="clipboard_size_limit_description">Odstrani najstarejše vnose preko omejitve</string>
+    <string name="clipboard_max_size">Največje število vnosov: %1$d</string>
+    <string name="clipboard_clear_all">Počisti vse</string>
+    <string name="clipboard_back">Nazaj</string>
+    <string name="clipboard_pin">Pripni</string>
+    <string name="clipboard_unpin">Odpni</string>
+    <string name="clipboard_delete">Izbriši</string>
+    <string name="clipboard_paste">Prilepi</string>
+    <string name="clipboard_empty">Odložišče je prazno</string>
+    <string name="clipboard_disabled">Zgodovina odložišča ni omogočena</string>
+    <string name="clipboard_go_to_settings">Na nastavitve odložišča</string>
+    <string name="position_padding">Odmik od roba: %1$s</string>
+    <string name="warning_invalid_mode">Način \"%s\" v razporeditvi \"%s\" ni določen.</string>
+    <string name="use_private_clipboard">Zasebno odložišče</string>
+    <string name="use_private_clipboard_description">Kopiraj v interno odložišče namesto v sistemskega</string>
+    <string name="other">Drugo</string>
+    <string name="show_on_screen_keyboard">Prikaži zaslonsko tipkovnico</string>
+    <string name="show_on_screen_keyboard_description">Prikaži zaslonsko tipkovnico tudi pri rabi fizične tipkovnice</string>
+    <string name="slide_hold_enable">Premikanje kazalca \"podrsaj-zadrži\"</string>
+    <string name="slide_hold_description">Podrsaj in zadrži: ponovi premik kazalca. Podrsaj-vrni-zadrži: premikanje po besedah. Vračalka: podrsaj in zadrži: ponovi brisanje.Podrsaj-vrni-zadrži: izbriši besedo.</string>
 </resources>

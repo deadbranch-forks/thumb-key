@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Thumb-Key</string>
     <string name="settings">Parametri</string>
     <string name="system">Sistema</string>
     <string name="light">Chiaro</string>
@@ -85,10 +84,21 @@
     <string name="ghost_keys_description">Accedi ai simboli nascosti senza dover passare alla tastiera numerica</string>
     <string name="restore_database">Ripristino database</string>
     <string name="restore_database_warning">Attenzione: il database corrente verrà eliminato</string>
-    <string name="database_restored">Database ripristinato.</string>
     <string name="database_backed_up">Database salvato.</string>
     <string name="backup_and_restore">Backup e ripristino</string>
     <string name="modify_keys">Modifica tasti</string>
     <string name="key_modification_placeholder">Inserisci YAML</string>
     <string name="how_to_modify_keys">Come modificare i tasti</string>
+    <string name="duration_1_day">1 giorno</string>
+    <string name="duration_2_days">2 giorni</string>
+    <string name="duration_4_days">4 giorni</string>
+    <string name="duration_7_days">7 giorni</string>
+    <string name="duration_1_hour">1 ora</string>
+    <string name="duration_2_hours">2 ore</string>
+    <string name="duration_4_hours">4 ore</string>
+    <string name="duration_12_hours">12 ore</string>
+    <string name="duration_5_minutes">5 minuti</string>
+    <string name="duration_10_minutes">10 minuti</string>
+    <string name="duration_30_minutes">30 minuti</string>
+    <string name="clipboard_paste">Incolla</string>
 </resources>

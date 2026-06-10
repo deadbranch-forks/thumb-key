@@ -3,7 +3,6 @@
     <string name="counterclockwise_drag_action">إجراء السحب عكس اتجاه عقارب الساعة</string>
     <string name="whats_new">ما الجديد</string>
     <string name="copy">تم نسخ النص المحدد</string>
-    <string name="app_name">مفتاح الإبهام</string>
     <string name="dynamic">ديناميكي</string>
     <string name="green">أخضر</string>
     <string name="pink">وردي</string>
@@ -29,7 +28,6 @@
     <string name="key_border_width">عرض حدود المفتاح: %1$s</string>
     <string name="circular_drag_enable">سحب دائري</string>
     <string name="ghost_keys_enable">مفاتيح الأشباح</string>
-    <string name="database_restored">تم استعادة قاعدة البيانات.</string>
     <string name="database_backed_up">تم نسخ قاعدة البيانات احتياطيًا.</string>
     <string name="backup_and_restore">النسخ الاحتياطي والاستعادة</string>
     <string name="settings">الإعدادات</string>

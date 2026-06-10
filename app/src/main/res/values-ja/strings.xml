@@ -50,7 +50,6 @@
     <string name="restore_database">データベースの復元</string>
     <string name="restore_database_warning">警告: これにより現在のデータベースが消去されます</string>
     <string name="vibrate_warning">システム設定でタッチフィードバックを有効にする必要があります</string>
-    <string name="app_name">Thumb-Key</string>
     <string name="source_code">ソースコード</string>
     <string name="position">位置</string>
     <string name="vibrate_on_tap">タップ時に振動</string>
@@ -64,7 +63,6 @@
     <string name="finish_setup">設定完了</string>
     <string name="key_padding">キーの余白: %1$s</string>
     <string name="ghost_keys_description">数字ビューに切り替えずに隠れた記号キーにアクセス</string>
-    <string name="database_restored">データベースが復元されました。</string>
     <string name="follow_me_mastodon">Mastodonでフォローする</string>
     <string name="open_source">オープンソース</string>
     <string name="look_and_feel">外観と操作感</string>

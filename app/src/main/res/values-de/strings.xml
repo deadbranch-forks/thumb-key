@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Thumb-Key</string>
     <string name="settings">Einstellungen</string>
     <string name="system">System</string>
     <string name="light">Hell</string>
@@ -75,7 +74,6 @@
     <string name="send_numeric">Zifferntaste</string>
     <string name="circular_drag_enable">Kreisförmig ziehen</string>
     <string name="restore_database">Datenbank wiederherstellen</string>
-    <string name="database_restored">Datenbank wiederhergestellt.</string>
     <string name="database_backed_up">Datenbank gesichert.</string>
     <string name="backup_and_restore">Sicherung und Wiederherstellung</string>
     <string name="slide_cursor_acceleration_quadratic">Quadratische Beschleunigung</string>
@@ -98,4 +96,26 @@
     <string name="key_modification_placeholder">YAML eingeben</string>
     <string name="how_to_modify_keys">Wie werden Tasten bearbeitet</string>
     <string name="disable_fullscreen_editor">Vollbild-Texteditor deaktivieren</string>
+    <string name="vibrate_on_slide">Vibrieren bei Wischgesten</string>
+    <string name="duration_5_minutes">5 Minuten</string>
+    <string name="duration_10_minutes">10 Minuten</string>
+    <string name="duration_30_minutes">30 Minuten</string>
+    <string name="duration_1_hour">1 Stunde</string>
+    <string name="duration_2_hours">2 Stunden</string>
+    <string name="duration_4_hours">4 Stunden</string>
+    <string name="duration_12_hours">12 Stunden</string>
+    <string name="duration_1_day">1 Tag</string>
+    <string name="duration_2_days">2 Tage</string>
+    <string name="duration_4_days">4 Tage</string>
+    <string name="duration_7_days">7 Tage</string>
+    <string name="clipboard_back">Zurück</string>
+    <string name="clipboard_pin">Anpinnen</string>
+    <string name="clipboard_unpin">Entpinnen</string>
+    <string name="clipboard_paste">Einfügen</string>
+    <string name="clipboard_characters">%1$d Zeichen</string>
+    <string name="clipboard_empty">Die Zwischenablage ist leer</string>
+    <string name="clipboard_clear_all">Alles leeren</string>
+    <string name="clipboard_history">Zwischenablagenverlauf</string>
+    <string name="clipboard_cleanup_after">Aufräumen nach %1$s</string>
+    <string name="clipboard_history_enabled">Zwischenablagenverlauf aktivieren</string>
 </resources>

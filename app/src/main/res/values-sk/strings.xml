@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Thumb-Key</string>
     <string name="settings">Nastavenia</string>
     <string name="system">Systém</string>
     <string name="light">Svetlá</string>
@@ -68,7 +67,6 @@
     <string name="ghost_keys_description">Prístup k skrytým symbolom bez zmeny na numerický mód</string>
     <string name="restore_database">Obnoviť databázu</string>
     <string name="restore_database_warning">Upozornenie: Toto vymaže vašu aktuálnu databázu</string>
-    <string name="database_restored">Databáza obnovená.</string>
     <string name="database_backed_up">Databáza zálohovaná.</string>
     <string name="left">Vľavo</string>
     <string name="social">Sociálne siete</string>

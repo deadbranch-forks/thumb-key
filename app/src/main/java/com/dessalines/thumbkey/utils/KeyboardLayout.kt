@@ -25,6 +25,7 @@ import com.dessalines.thumbkey.keyboards.KB_DE_THUMBKEY_SYMNUM
 import com.dessalines.thumbkey.keyboards.KB_DE_THUMBKEY_WORDS
 import com.dessalines.thumbkey.keyboards.KB_DE_TYPESPLIT
 import com.dessalines.thumbkey.keyboards.KB_DE_TYPESPLIT_IMPROVED
+import com.dessalines.thumbkey.keyboards.KB_DE_TYPESPLIT_SUAVE
 import com.dessalines.thumbkey.keyboards.KB_ENLV_THUMBKEY
 import com.dessalines.thumbkey.keyboards.KB_EN_COLUMNAR
 import com.dessalines.thumbkey.keyboards.KB_EN_COLUMNAR_QUICK
@@ -184,6 +185,7 @@ import com.dessalines.thumbkey.keyboards.KB_RU_MESSAGE_OWL
 import com.dessalines.thumbkey.keyboards.KB_RU_THUMBKEY
 import com.dessalines.thumbkey.keyboards.KB_RU_THUMBKEY_SYMBOLS
 import com.dessalines.thumbkey.keyboards.KB_RU_THUMBKEY_WRITER
+import com.dessalines.thumbkey.keyboards.KB_SAH_THUMBKEY_WRITER
 import com.dessalines.thumbkey.keyboards.KB_SCANDINAVIAN_MESSAGEASE
 import com.dessalines.thumbkey.keyboards.KB_SK_THUMBKEY_V1
 import com.dessalines.thumbkey.keyboards.KB_SK_THUMBKEY_V2
@@ -452,4 +454,6 @@ enum class KeyboardLayout(
         KB_FR_EN_FRAPPE_FLUIDE_V1_LEFT_HANDED_CONTROL_LEFT_SIDE,
     ), // français frappefluide (fr+en) v1 (gauchère, outils à gauche),
     HUHungram(KB_HU_HUNGRAM), // magyar hungram
+    SAHThumbKeyWriter(KB_SAH_THUMBKEY_WRITER), // сахалыы writer thumb-key
+    DETypeSplitSuave(KB_DE_TYPESPLIT_SUAVE), // deutsch type-split suave
 }

@@ -244,3 +244,61 @@ val MIGRATION_21_22 =
             )
         }
     }
+
+val MIGRATION_22_23 =
+    object : Migration(22, 23) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            // Add clipboard settings columns (ClipboardItem table is in separate database)
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN clipboard_history_enabled INTEGER NOT NULL DEFAULT $DEFAULT_CLIPBOARD_HISTORY_ENABLED",
+            )
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN clipboard_auto_cleanup_enabled INTEGER NOT NULL DEFAULT $DEFAULT_CLIPBOARD_AUTO_CLEANUP_ENABLED",
+            )
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN clipboard_cleanup_after_minutes INTEGER NOT NULL DEFAULT $DEFAULT_CLIPBOARD_CLEANUP_AFTER_MINUTES",
+            )
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN clipboard_size_limit_enabled INTEGER NOT NULL DEFAULT $DEFAULT_CLIPBOARD_SIZE_LIMIT_ENABLED",
+            )
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN clipboard_max_size INTEGER NOT NULL DEFAULT $DEFAULT_CLIPBOARD_MAX_SIZE",
+            )
+        }
+    }
+
+val MIGRATION_23_24 =
+    object : Migration(23, 24) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN position_padding INTEGER NOT NULL DEFAULT $DEFAULT_POSITION_PADDING",
+            )
+        }
+    }
+
+val MIGRATION_24_25 =
+    object : Migration(24, 25) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN use_private_clipboard INTEGER NOT NULL DEFAULT $DEFAULT_USE_PRIVATE_CLIPBOARD",
+            )
+        }
+    }
+
+val MIGRATION_25_26 =
+    object : Migration(25, 26) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN show_on_screen_keyboard INTEGER NOT NULL DEFAULT $DEFAULT_SHOW_ON_SCREEN_KEYBOARD",
+            )
+        }
+    }
+
+val MIGRATION_26_27 =
+    object : Migration(26, 27) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE AppSettings ADD COLUMN slide_hold_enabled INTEGER NOT NULL DEFAULT $DEFAULT_SLIDE_HOLD_ENABLED",
+            )
+        }
+    }

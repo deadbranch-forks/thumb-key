@@ -53,6 +53,9 @@
     - [Example 4](#example-4)
     - [Example 5](#example-5)
     - [Example 6](#example-6)
+  - [Clipboard](#clipboard)
+    - [Clipboard history](#clipboard-history)
+    - [Private clipboard](#private-clipboard)
   - [Other](#other)
 - [Thumb-Key Design](#thumb-key-design)
   - [A History of Phone Keyboards](#a-history-of-phone-keyboards)
@@ -114,10 +117,12 @@ This project is a follow-up to the now unmaintained (and closed-source) [MessagE
 
 - **Tap** to access numbers & symbols. **Tap again** to return to letters.
 - **Swipe to top-left** to select all.
+- **Swipe to top-left and back** to select the current line.
 - **Swipe up** to copy - If nothing is selected, all the text will be copied.
 - **Swipe to top-right** to cut - If nothing is selected, all the text will be selected and cut.
 - **Swipe right** to redo.
 - **Swipe down** to paste.
+- **Swipe down and then up on paste** to open clipboard history (swipe-return gesture).
 - **Swipe left** to undo.
 
 ### Slide gestures
@@ -178,7 +183,7 @@ This YAML configuration modifies the key in the second row, first column, center
   - `ctrled`
   - `alted`
 - `key1_0` specifies the key to modify. The first number is the row, and the second number is the column. The top row is 0, and the left column is 0.
-- `center` specifies which slide/touch direction of the key to modify. Possible values are:
+- `center` specifies which slide/touch direction of the key to modify. Possible values depend on the value of `swipeType` -- for `swipeType: EIGHT_WAY`, they are:
   - `center`
   - `left`
   - `topLeft`
@@ -196,11 +201,13 @@ This YAML configuration modifies the key in the second row, first column, center
 ENThumbKey:
   main:
     key0_0:
+      swipeType: EIGHT_WAY
       right: { text: ê }
       topRight: { text: è }
       top: { text: ę }
   shifted:
     key0_0:
+      swipeType: EIGHT_WAY
       right: { text: Ê }
       topRight: { text: È }
       top: { text: Ę }
@@ -227,6 +234,8 @@ ESCAMessagEase:
 
 - Two keyboards are modified: `ENThumbKey (english thumbkey)` and `ESCAMessagEase (español català messagease)`.
 - The first keyboard has both `main` and `shifted` modes modified.
+- Because we are adding swipe directions to letters in `ENThumbKey` which don't
+  have them by default, we must adjust `swipeType`.
 - The second keyboard uses the `size` property to specify the display size of the text. Possible values are:
   - `LARGE`
   - `SMALL`
@@ -258,6 +267,7 @@ This swaps the 'switch language' and 'toggle emoji' actions on the top-right key
 - `ToggleNumericMode`
 - `ToggleABCMode`
 - `ToggleEmojiMode`
+- `ToggleClipboardMode`
 - `ToggleCapsLock`
 - `ToggleShiftModeTrue`
 - `ToggleShiftModeFalse`
@@ -347,6 +357,22 @@ ENThumbKey:
 ```
 
 The attributes `swipeReturnText` and `swipeReturnAction` allow defining swipe-return behaviour. Possible values for `swipeReturnAction` are the same as the ones for `keyAction`.
+
+### Clipboard
+
+#### Clipboard history
+
+This feature retains the latest text clips that were copied/cut, so that you can select an older one. It’s enabled in the parameters and accessible through a swipe-return on the _paste_ slide action.
+
+#### Private clipboard
+
+Once enabled, text copied or cut through the copy/cut actions in ThumbKey won’t be shared with the system clipboard of Android.
+Instead, it will be stored in the app’s memory and pasted from there instead of from the system clipboard.
+
+Note that using cut/copy/paste controls from outside the keyboard will use the standard system clipboard and not ThumbKey’s private one.
+
+This ensures more privacy, as data added to the system clipboard can actually be accessed by any app.
+In some Android devices such as _samsung_ devices, it is also automatically retrieved and stored by a proprietary application, without any option to disable it.
 
 ### Other
 
