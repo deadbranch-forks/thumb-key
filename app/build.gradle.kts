@@ -18,7 +18,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.dessalines.thumbkey"
+        applicationId = "com.dessalines.thumbkey.deadbranch"
         minSdk = 24
         targetSdk = 36
         versionCode = 179
